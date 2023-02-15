@@ -1,0 +1,45 @@
+USE master
+go
+
+CREATE DATABASE [DBAdatabase]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( 
+	NAME = N'DBAdatabase'
+	, FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\DBAdatabase.mdf' 
+	, SIZE = 51200KB 
+	, FILEGROWTH = 65536KB 
+), 
+ FILEGROUP [Secondary] 
+( 
+	NAME = N'DBAdatabase2'
+	, FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\DBAdatabase2.ndf' 
+	, SIZE = 51200KB 
+	, FILEGROWTH = 65536KB 
+)
+ LOG ON 
+( 
+	NAME = N'DBAdatabase_log',
+	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\DBAdatabase_log.ldf' ,
+	SIZE = 8192KB ,
+	FILEGROWTH = 65536KB 
+)
+GO
+
+ALTER DATABASE [DBAdatabase] SET COMPATIBILITY_LEVEL = 150
+ALTER DATABASE [DBAdatabase] SET ANSI_NULL_DEFAULT OFF 
+ALTER DATABASE [DBAdatabase] SET ANSI_NULLS OFF 
+ALTER DATABASE [DBAdatabase] SET ANSI_PADDING OFF 
+ALTER DATABASE [DBAdatabase] SET AUTO_CLOSE OFF 
+GO
+
+IF NOT EXISTS 
+	(
+		SELECT 
+			name 
+		FROM 
+			sys.filegroups 
+		WHERE is_default=1 AND name = N'Secondary'
+	) 
+ALTER DATABASE [DBAdatabase] MODIFY FILEGROUP [Secondary] DEFAULT
+GO
